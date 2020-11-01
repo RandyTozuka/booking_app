@@ -1,9 +1,8 @@
 class BookingsController < ApplicationController
   def index
-    if current_user
+    if current_user && Booking.any?
       @bookings = current_user.bookings.all
     end
-
   end
 
   def show
@@ -20,7 +19,6 @@ class BookingsController < ApplicationController
     @booking_count6 = Booking.where("date LIKE?", "%#{date}%").where(slot:"12:45~13:00").count
     @booking_count7 = Booking.where("date LIKE?", "%#{date}%").where(slot:"13:00~13:15").count
     @booking_count8 = Booking.where("date LIKE?", "%#{date}%").where(slot:"13:15~13:30").count
-
   end
 
   def create
@@ -29,7 +27,7 @@ class BookingsController < ApplicationController
       redirect_to '/'
     else
       flash[:danger]= "Your booking failed"
-      redirect_to '/'
+      redirect_to '/bookings/new'
     end
   end
 
