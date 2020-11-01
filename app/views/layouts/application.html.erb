@@ -11,19 +11,15 @@
 
   <body>
     <header>
-     <nav>
-         <% if user_signed_in? %>
-         <p>Hello <%= current_user.email %> !</p>
-           <%= link_to 'change your profile', edit_user_registration_path %>
-           <%= link_to 'sign-out', destroy_user_session_path, method: :delete %>
-         <% else %>
-           <%= link_to 'sign-up', new_user_registration_path %>
-           <%= link_to 'sign-in', new_user_session_path %>
-         <% end %>
-     </nav>
    </header>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
-    <%= yield %>
+    <% flash.each do |message_type, message| %>
+      <%= content_tag(:div, message, class: "alert alert-#{message_type}") %>
+    <% end %>
+    <div class="container">
+      <h1><%= link_to 'Canteen Booking System', root_path %></h1>
+      <%= yield %>
+    </div>
   </body>
 </html>
