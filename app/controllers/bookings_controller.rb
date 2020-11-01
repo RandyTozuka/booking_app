@@ -11,7 +11,7 @@ class BookingsController < ApplicationController
 
   def new
     @booking = Booking.new
-    date = "2020-11-05"
+    date = "2020-11-01"
     @booking_count1 = Booking.where("date LIKE?", "%#{date}%").where(slot:"11:30~11:45").count
     @booking_count2 = Booking.where("date LIKE?", "%#{date}%").where(slot:"11:45~12:00").count
     @booking_count3 = Booking.where("date LIKE?", "%#{date}%").where(slot:"12:00~12:15").count
