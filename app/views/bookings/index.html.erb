@@ -8,11 +8,13 @@
   </div>
   <h3>Your booking status is as below;</h3>
   <div class="wrapper">
-    <% @bookings.each do |b| %>
-      <p><%= b.date.strftime('%Y/%m/%d (%a)') %></p>
-      <p><%= b.slot %></p>
-      <%= link_to 'Change', edit_booking_path(b), class: 'btn btn-default' %>
-      <%= link_to 'Delete', booking_path(b), method: :delete, data:{confirm:"Are you sure?"}, class: 'btn btn-danger' %>
+    <% if @bookings %>
+      <% @bookings.each do |b| %>
+        <p><%= b.date.strftime('%Y/%m/%d (%a)') %></p>
+        <p><%= b.slot %></p>
+        <%= link_to 'Change', edit_booking_path(b), class: 'btn btn-default' %>
+        <%= link_to 'Delete', booking_path(b), method: :delete, data:{confirm:"Are you sure?"}, class: 'btn btn-danger' %>
+      <% end %>
     <% end %>
   </div>
   <% else %>
