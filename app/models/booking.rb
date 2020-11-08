@@ -3,6 +3,7 @@ class Booking < ApplicationRecord
   validates :user_id, presence: true
   validates :date,{presence:true}
   validates :slot,{presence:true}
+
   # validate :check_num_of_a_slot
   #
   # def check_num_of_a_slot

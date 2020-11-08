@@ -1,4 +1,5 @@
 class BookingsController < ApplicationController
+
   def index
     if current_user && Booking.any?
       @bookings = current_user.bookings.all
@@ -10,7 +11,7 @@ class BookingsController < ApplicationController
 
   def new
     @booking = Booking.new
-    date = "2020-11-01"
+    date = "2020-11-02"
     @booking_count1 = Booking.where("date LIKE?", "%#{date}%").where(slot:"11:30~11:45").count
     @booking_count2 = Booking.where("date LIKE?", "%#{date}%").where(slot:"11:45~12:00").count
     @booking_count3 = Booking.where("date LIKE?", "%#{date}%").where(slot:"12:00~12:15").count
@@ -22,12 +23,19 @@ class BookingsController < ApplicationController
   end
 
   def create
-    if current_user.bookings.create(booking_params)
-      flash[:success]= "Successfully booked"
-      redirect_to '/'
+    @user = current_user
+    # @booking = booking_params
+    if Booking.where(user_id: @user.id).where(date: @booking.date).count >= 1
+      flash[:danger]= "Double booking in the the day! Plesae check."
+      redirect_to new_booking_path
     else
-      flash[:danger]= "Your booking failed"
-      redirect_to '/bookings/new'
+      if current_user.bookings.create(booking_params)
+        flash[:success]= "Successfully booked"
+        redirect_to '/'
+      else
+        flash[:danger]= "Your booking failed"
+        redirect_to '/bookings/new'
+      end
     end
   end
 
