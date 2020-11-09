@@ -24,9 +24,9 @@ class BookingsController < ApplicationController
 
   def create
     @user = current_user
-    # @booking = booking_params
-    if Booking.where(user_id: @user.id).where(date: @booking.date).count >= 1
-      flash[:danger]= "Double booking in the the day! Plesae check."
+    @booking = Booking.find_by(params[:id])
+    if Booking.where(user_id: @user.id).where(date: @booking.date).any?
+      flash[:danger]= "Double booking in the the day! Please check."
       redirect_to new_booking_path
     else
       if current_user.bookings.create(booking_params)
