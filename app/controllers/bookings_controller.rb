@@ -10,7 +10,7 @@ class BookingsController < ApplicationController
   end
 
   def new
-    @booking = Booking.new
+    @booking = current_user.bookings.new
     date = "2020-11-02"
     @booking_count1 = Booking.where("date LIKE?", "%#{date}%").where(slot:"11:30~11:45").count
     @booking_count2 = Booking.where("date LIKE?", "%#{date}%").where(slot:"11:45~12:00").count
@@ -22,9 +22,10 @@ class BookingsController < ApplicationController
     @booking_count8 = Booking.where("date LIKE?", "%#{date}%").where(slot:"13:15~13:30").count
   end
 
-  def create
+  def create 
     @user = current_user
-    @booking = Booking.find_by(params[:id])
+    @booking = @user.bookings.find_by(params[user_id: booking_params])
+    binding.pry
     if Booking.where(user_id: @user.id).where(date: @booking.date).any?
       flash[:danger]= "Double booking in the the day! Please check."
       redirect_to new_booking_path
@@ -66,7 +67,7 @@ class BookingsController < ApplicationController
 
   private
     def booking_params
-      params.require(:booking).permit(:date, :slot)
+      params.require(:booking).permit(:user_id, :date, :slot)
     end
 
 end# of class
