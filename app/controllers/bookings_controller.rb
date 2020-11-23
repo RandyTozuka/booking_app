@@ -1,8 +1,10 @@
 class BookingsController < ApplicationController
+#binding.pry
 
   def index
     if current_user && Booking.any?
-      @bookings = current_user.bookings.all
+      # @bookings = current_user.bookings.all
+      @bookings = current_user.bookings.where('date >= ?', Date.today)
     end
   end
 
