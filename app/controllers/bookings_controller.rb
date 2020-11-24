@@ -28,7 +28,7 @@ class BookingsController < ApplicationController
       flash[:danger]= "Dont' be a slave of your job!"
       redirect_to new_booking_path
     else
-    #同じ人が同じ日に予約を入れる事を防ぐ
+    #同じ人が同じ日に予約を入れる事を防ぐ…昼食は一日一回であろうと想定
       if Booking.where(user_id: @user.id).where(date: @booking_date).any?
         flash[:danger]= "Double booking in the the day! Please check."
         redirect_to new_booking_path
