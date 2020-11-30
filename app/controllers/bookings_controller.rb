@@ -28,6 +28,7 @@ class BookingsController < ApplicationController
       flash[:danger]= "Dont' be a slave of your job!"
       redirect_to new_booking_path
     else
+    # binding.pry
     #同じ人が同じ日に予約を入れる事を防ぐ…昼食は一日一回であろうと想定
       if Booking.where(user_id: @user.id).where(date: @booking_date).any?
         flash[:danger]= "Double booking in the the day! Please check."
@@ -53,12 +54,32 @@ class BookingsController < ApplicationController
   end
 
   def update
-    if current_user.bookings.update(booking_params)
-      flash[:success]= "Successfully changed"
-      redirect_to '/'
+    @user = current_user
+    @booking_date = params[:booking][:date]
+    @booking_slot = params[:booking][:slot]
+    # 予約ができる日は本日以降の未来とする
+    if @booking_date <  Date.today.to_s
+      flash[:danger]= "Head for the future!"
+      redirect_to root_path
+    # 日曜（0）か土曜（6）は予約をさせない。→@booking_dateはstring型なのでdate型に変換し、wdayで曜日を出す
+    elsif Date.strptime(@booking_date).wday == 0 || Date.strptime(@booking_date).wday == 6
+      flash[:danger]= "Dont' be a slave of your job!"
+      redirect_to root_path
     else
-      flash[:danger]= "Your change failed"
-      redirect_to '/'
+    # binding.pry
+    #同じ日の同じスロットに入る人数の調整…現在はテストとして1人以上予約が入ることを阻止
+      if Booking.where(date:@booking_date).where(slot:@booking_slot).count >= 1
+            flash[:danger]= "That slot is fully occupied! Please try other slot."
+            redirect_to root_path
+      else
+        if current_user.bookings.update(booking_params)
+          flash[:success]= "Successfully changed!"
+          redirect_to '/'
+        else
+          flash[:danger]= "Your booking changing failed"
+          redirect_to '/bookings/new'
+        end
+      end
     end
   end
 
