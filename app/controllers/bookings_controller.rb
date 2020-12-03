@@ -3,7 +3,6 @@ class BookingsController < ApplicationController
 
   def index
     if current_user && Booking.any?
-      # @bookings = current_user.bookings.all
       @bookings = current_user.bookings.where('date >= ?', Date.today)
     end
   end
@@ -32,7 +31,7 @@ class BookingsController < ApplicationController
     #同じ人が同じ日に予約を入れる事を防ぐ…昼食は一日一回であろうと想定
       if Booking.where(user_id: @user.id).where(date: @booking_date).any?
         flash[:danger]= "Double booking in the the day! Please check."
-        redirect_to new_booking_path
+        redirect_to root_path
     #同じ日の同じスロットに入る人数の調整…現在はテストとして1人以上予約が入ることを阻止
       elsif Booking.where(date:@booking_date).where(slot:@booking_slot).count >= 1
             flash[:danger]= "That slot is fully occupied! Please try other slot."
