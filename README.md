@@ -10,3 +10,6 @@ Things you may want to cover:
 
 * Rails version
   Rails 6.0.3.4
+
+＊本アプリについて
+・コロナ禍で社員食堂に入る人数をコントロールし、蜜な状態にさせないための、テーブル予約アプリです。
