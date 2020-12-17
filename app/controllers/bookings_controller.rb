@@ -16,14 +16,16 @@ class BookingsController < ApplicationController
 
   def create
     @user = current_user
-    @booking_date = params[:booking][:date]
+    @booking_date = Date.parse(params[:booking][:date])
     @booking_slot = params[:booking][:slot]
+    # binding.pry
     # 予約ができる日は本日以降の未来とする
-    if @booking_date <  Date.today.to_s
+    if @booking_date <  Date.today
       flash[:danger]= "Head for the future!"
       redirect_to new_booking_path
     # 日曜（0）か土曜（6）は予約をさせない。→@booking_dateはstring型なのでdate型に変換し、wdayで曜日を出す
-    elsif Date.strptime(@booking_date).wday == 0 || Date.strptime(@booking_date).wday == 6
+    # elsif Date.strptime(@booking_date).wday == 0 || Date.strptime(@booking_date).wday == 6
+    elsif @booking_date.wday == 0 || Date.strptime(@booking_date).wday == 6
       flash[:danger]= "Dont' be a slave of your job!"
       redirect_to new_booking_path
     else
